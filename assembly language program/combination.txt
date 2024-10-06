@@ -1,0 +1,54 @@
+        lw      0       1       n           # Load n into $1
+        lw      0       2       r           # Load r into $2
+        lw      0       6       subAdr      # Load address of combination subroutine
+        jalr    6       7                   # Call combination subroutine, $7 = return address
+        halt                                # Halt the program after calculation
+comb    sw      5       7       stack       # Save return address on stack
+        lw      0       6       pos1        # $6 = 1
+        add     5       6       5           # Increment stack pointer
+        sw      5       1       stack       # Save n on stack
+        add     5       6       5           # Increment stack pointer
+        sw      5       2       stack       # Save r on stack
+        add     5       6       5           # Increment stack pointer
+        beq     2       0       base_case_1 # If r == 0, return 1
+        beq     1       2       base_case_1 # If n == r, return 1
+        lw      0       6       neg1        # $6 = -1
+        add     1       6       1           # n = n - 1
+        lw      0       6       subAdr      # Load address of combination subroutine
+        jalr    6       7                   # Recursive call combination(n-1, r)
+        lw      0       6       neg1        # $6 = -1
+        add     2       6       2           # r = r - 1
+        lw      0       6       subAdr      # Load address of combination subroutine
+        jalr    6       7                   # Recursive call combination(n-1, r-1)
+        lw      0       6       neg1        # $6 = -1
+        add     5       6       5           # Decrement stack pointer
+        lw      5       2       stack       # Load r from stack
+        add     5       6       5           # Decrement stack pointer
+        lw      5       1       stack       # Load n from stack
+        add     5       6       5           # Decrement stack pointer
+        lw      5       7       stack       # Load return address
+        jalr    7       6                   # Return to caller
+base_case_1 lw      0       6       pos1        # $6 = 1
+            add     3       6       3           # Return 1 in $3
+            lw      0       6       neg1        # $6 = -1
+            add     5       6       5           # Decrement stack pointer
+            lw      5       2       stack       # Load r from stack
+            add     5       6       5           # Decrement stack pointer
+            lw      5       1       stack       # Load n from stack
+            add     5       6       5           # Decrement stack pointer
+            lw      5       7       stack       # Load return address
+            jalr    7       6
+neg1    .fill   -1
+pos1    .fill   1
+subAdr  .fill   comb                        # Address of combination subroutine
+n       .fill   7                           # n = 7 (example)
+r       .fill   3                           # r = 3 (example)
+stack   .fill   0                           # Initial stack pointer
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
