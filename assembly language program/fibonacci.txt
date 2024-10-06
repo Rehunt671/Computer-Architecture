@@ -1,0 +1,52 @@
+        lw      0       1       n           # Load n into $1
+        lw      0       6       subAdr      # Load address of fibonacci subroutine
+        jalr    6       7                   # Call fibonacci subroutine, $7 = return address
+        halt                                # Halt the program after calculation
+fibo    sw      5       7       stack       # Save return address on stack
+        lw      0       6       pos1        # $6 = 1
+        add     5       6       5           # Increment stack pointer
+        sw      5       1       stack       # Save n on stack
+        add     5       6       5           # Increment stack pointer
+        beq     1       0       base_case_1   # If n == 0, return 0
+        beq     1       6       base_case_2   # If n == 1, return 1
+        lw      0       6       neg1        # $6 = -1
+        add     1       6       1           # n = n - 1
+        lw      0       6       subAdr      # Load address of fibonacci subroutine
+        jalr    6       7                   # Recursive call fibonacci(n-1)
+        lw      0       6       neg1        # $6 = -1
+        add     1       6       1           # n = n - 1
+        lw      0       6       subAdr      # Load address of fibonacci subroutine
+        jalr    6       7                   # Recursive call fibonacci(n-2)
+        lw      0       6       neg1        # $6 = -1
+        add     5       6       5           # Decrement stack pointer
+        lw      5       1       stack       # Load n from stack
+        add     5       6       5           # Decrement stack pointer
+        lw      5       7       stack       # Load return address
+        jalr    7       6                   # Return to caller
+base_case_1 lw      0       6       neg1        # $6 = -1
+            add     5       6       5           # Decrement stack pointer
+            lw      5       2       stack       # Load n from stack
+            add     5       6       5           # Decrement stack pointer
+            lw      5       7       stack       # Load return address
+            jalr    7       6                   # Return to caller
+base_case_2 lw      0       6       pos1        # $6 = 1
+            add     3       6       3           # Return 1 in $3
+            lw      0       6       neg1        # $6 = -1
+            add     5       6       5           # Decrement stack pointer
+            lw      5       1       stack       # Load n from stack
+            add     5       6       5           # Decrement stack pointer
+            lw      5       7       stack       # Load return address
+            jalr    7       6                   # Return to caller
+neg1    .fill   -1
+pos1    .fill   1
+subAdr  .fill   fibo                        # Address of fibonacci subroutine
+n       .fill   7                           # input
+stack   .fill   0                           # Initial stack pointer
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
+.fill    0                                   # Fill additional space for stack
