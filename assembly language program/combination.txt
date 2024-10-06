@@ -41,8 +41,8 @@ base_case_1 lw      0       6       pos1        # $6 = 1
 neg1    .fill   -1
 pos1    .fill   1
 subAdr  .fill   comb                        # Address of combination subroutine
-n       .fill   10                           # n = 7 (example)
-r       .fill   4                           # r = 3 (example)
+n       .fill   7                           # n = 7 (example)
+r       .fill   3                           # r = 3 (example)
 stack   .fill   0                           # Initial stack pointer
 .fill    0                                   # Fill additional space for stack
 .fill    0                                   # Fill additional space for stack
