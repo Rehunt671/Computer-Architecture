@@ -1,4 +1,4 @@
-package Assembler;
+package assembler;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

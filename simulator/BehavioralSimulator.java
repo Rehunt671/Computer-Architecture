@@ -1,3 +1,5 @@
+package simulator;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -193,7 +195,7 @@ public class BehavioralSimulator {
     // main program execution
     public static void main(String[] args) {
         BehavioralSimulator simulator = new BehavioralSimulator();
-        simulator.loadMachineCode("output.txt"); // Load instruction form file
+        simulator.loadMachineCode("assembler/output.txt"); // Load instruction form file
         simulator.simulate(); // start
         System.out.println("final state of machine:"); // show final state
         System.out.println("total of " + simulator.instructionsExecuteCount + " instructions executed"); // display total count

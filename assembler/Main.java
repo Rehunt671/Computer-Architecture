@@ -1,12 +1,12 @@
-package Assembler;
+package assembler;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 public class Main {
     public static void main(String[] args) {
-        String filePath = "src/Assembler/sample.txt";
-        String outputFilePath = "src/Assembler/output.txt";
+        String filePath = "assembler/sample.txt";
+        String outputFilePath = "assembler/output.txt";
         try {
             int[] machineCodes = Assembler.assemble(filePath);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {

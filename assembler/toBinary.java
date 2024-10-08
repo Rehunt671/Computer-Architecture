@@ -1,4 +1,4 @@
-package Assembler;
+package assembler;
 
 public class toBinary {
 
