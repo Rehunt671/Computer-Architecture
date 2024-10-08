@@ -1,5 +1,6 @@
         lw      0       1       n           # Load n into $1
         lw      0       2       r           # Load r into $2
+        lw      0       3       0           # Clear $3 (result)
         lw      0       6       subAdr      # Load address of combination subroutine
         jalr    6       7                   # Call combination subroutine, $7 = return address
         halt                                # Halt the program after calculation

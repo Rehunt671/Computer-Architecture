@@ -1,4 +1,5 @@
         lw      0       1       n           # Load n into $1
+        lw      0       3       0           # Clear $3 (result)
         lw      0       6       subAdr      # Load address of fibonacci subroutine
         jalr    6       7                   # Call fibonacci subroutine, $7 = return address
         halt                                # Halt the program after calculation
