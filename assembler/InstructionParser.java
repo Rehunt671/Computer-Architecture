@@ -1,4 +1,4 @@
-package assembler;
+package Assembler;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -26,14 +26,13 @@ public class InstructionParser {
 
     // Assembly Instruction to Machine Code
     public static int parseInstruction(String instruction, String[] fields, Map<String, Integer> labels, int currentAddress) {
-        // If Instruction not .fill or not found in OPCODE MAP
+        // If instruction is not .fill or not found in OPCODE map
         if (!OPCODES.containsKey(instruction) && !".fill".equals(instruction)) {
             System.err.println("Error: Invalid opcode '" + instruction + "' at line " + currentAddress);
             System.exit(1);
         }
         // If it is .fill then call parseFill()
         if (".fill".equals(instruction)) {
-
             return parseFill(fields[0], labels);
         }
 
@@ -48,19 +47,46 @@ public class InstructionParser {
             String destReg = toBinary.toBin(Integer.parseInt(fields[2]), 3);
             machineCode.append(toBinary.toBin(opcode, 3)).append(regA).append(regB).append("0000000000000").append(destReg);
         }
-        // I-type instructions: lw, sw, beq
-        else if ("lw".equals(instruction) || "sw".equals(instruction) || "beq".equals(instruction)) {
+        // I-type instructions: lw, sw
+        else if ("lw".equals(instruction) || "sw".equals(instruction)) {
             String regA = toBinary.toBin(Integer.parseInt(fields[0]), 3);
             String regB = toBinary.toBin(Integer.parseInt(fields[1]), 3);
             int offset;
 
             if (labels.containsKey(fields[2])) {
+                offset = labels.get(fields[2]);
+            } else {
+                try {
+                    offset = Integer.parseInt(fields[2]);
+                } catch (NumberFormatException e) {
+                    System.err.println("Error: Undefined label or invalid offset '" + fields[2] + "' at line " + currentAddress);
+                    System.exit(1);
+                    return -1;
+                }
+            }
+            if (offset < -32768 || offset > 32767) {
+                System.err.println("Error: Offset out of range (-32768 to 32767) for instruction at line " + currentAddress);
+                System.exit(1);
+            }
 
-                if ("lw".equals(instruction) || "sw".equals(instruction)) {
-                    offset = labels.get(fields[2]);
-                } else {
+            machineCode.append(toBinary.toBin(opcode, 3)).append(regA).append(regB).append(toBinary.toBin(offset, 16));
+        }
+        // I-type instruction: beq
+        else if ("beq".equals(instruction)) {
+            String regA = toBinary.toBin(Integer.parseInt(fields[0]), 3);
+            String regB = toBinary.toBin(Integer.parseInt(fields[1]), 3);
+            int offset;
 
-                    offset = labels.get(fields[2]) - (currentAddress + 1);
+            if (labels.containsKey(fields[2])) {
+                int targetAddress = labels.get(fields[2]);
+
+                // If beq jumps to a higher address
+                if (targetAddress > currentAddress) {
+                    offset = targetAddress - (currentAddress - 1);
+                }
+                // If beq jumps to a lower address
+                else {
+                    offset = targetAddress - (currentAddress + 1);
                 }
             } else {
                 try {
@@ -92,9 +118,10 @@ public class InstructionParser {
         return Integer.parseInt(machineCode.toString(), 2);
     }
 
+    // Parsing .fill
     private static int parseFill(String field, Map<String, Integer> labels) {
         if (labels.containsKey(field)) {
-            return labels.get(field); // return label Address
+            return labels.get(field); // return label address
         }
         try {
             return Integer.parseInt(field);
