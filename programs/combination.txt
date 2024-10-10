@@ -1,6 +1,6 @@
         lw      0       1       n           # Load n into $1
         lw      0       2       r           # Load r into $2
-        lw      0       3       0           # Clear $3 (result)
+        lw      0       3       zero        # Clear $3 (result)
         lw      0       6       subAdr      # Load address of combination subroutine
         jalr    6       7                   # Call combination subroutine, $7 = return address
         halt                                # Halt the programs after calculation
@@ -39,6 +39,7 @@ base_case   lw      0       6       pos1        # $6 = 1
             add     5       6       5           # Decrement stack pointer
             lw      5       7       stack       # Load return address
             jalr    7       6
+zero    .fill   0
 neg1    .fill   -1
 pos1    .fill   1
 subAdr  .fill   comb                        # Address of combination subroutine
