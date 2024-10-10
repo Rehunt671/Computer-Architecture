@@ -1,24 +1,47 @@
-        lw      0       1       zero            # claer answer
+        lw      0       1       zero            # $1 = 0 (claer answer)
         lw      0       2       mcand           # $2 = mcand
         lw      0       3       mplier          # $3 = mplier
-        lw      0       4       zero            # $4 = 0
+        lw      0       4       sign            # $4 = 0
         lw      0       5       bit_checker     # $5 = bit_checker
-        lw      0       7       bit_max         # $7 = bit_max
-multi   beq     7       5       done            # if rep = 16 done
-        nand    5       3       6               # and mplier to check next bit
+        lw      0       6       MSB             # $6 = MSB
+        nand    2       6       6               # check MSB of mcand
         nand    6       6       6
-        beq     6       4       shift           # if last bit = 0 skip add
+        beq     6       0       skip            # if 0 skip
+        lw      0       7       one
+        add     0       7       4               # sign += 1
+        nand    2       2       2               # change -mcand to +mcand
+        add     2       7       2
+skip    lw      0       6       MSB             # $6 = MSB
+        nand    3       6       6               # check MSB of mplier
+        nand    6       6       6
+        beq     6       0       multi           # if 0 skip
+        lw      0       7       one
+        add     4       7       4               # sign += 1
+        nand    3       3       3               # change -mplier to +mplier
+        add     3       7       3
+multi   lw      0       6       MSB
+        beq     6       5       summary         # if rep = 16 summary
+        nand    5       3       7               # and mplier to check next bit
+        nand    7       7       7
+        lw      0       6       zero
+        beq     7       6       shift           # if last bit = 0 skip add
         add     2       1       1               # result += mcand
 shift   add     2       2       2               # sll mcand
         add     5       5       5               # change bit_checker by 1 bit
-        beq     0       0       multi           # back to muti
+        beq     0       0       multi           # back to multi
         noop
+summary beq     4       0       done            # if sign = 0 done
+        lw      0       6       one
+        add     6       6       6
+        beq     4       6       done            # if sign = 2 done
+        nand    1       1       1
+        lw      0       6       one             # change +result to -result
+        add     6       1       1
 done    halt
 zero            .fill   0
 one             .fill   1
-srl             .fill   -1
-m_one           .fill   -1
+sign            .fill   0
 mcand           .fill   32766
 mplier          .fill   10383
 bit_checker     .fill   1
-bit_max         .fill   32768
+MSB             .fill   32768
